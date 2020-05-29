@@ -40,9 +40,16 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var typeorm_1 = require("typeorm");
 var User_1 = require("./entity/User");
+var Countries_1 = require("./entity/Countries");
+var Services_1 = require("./entity/Services");
+var Projects_1 = require("./entity/Projects");
+var md5_typescript_1 = require("md5-typescript");
 // create typeorm connection
 typeorm_1.createConnection().then(function (connection) {
     var userRepository = connection.getRepository(User_1.User);
+    var countriesRepository = connection.getRepository(Countries_1.Countries);
+    var servicesRepository = connection.getRepository(Services_1.Services);
+    var projectsRepository = connection.getRepository(Projects_1.Projects);
     // create and setup express app
     var app = express();
     app.use(bodyParser.json());
@@ -56,7 +63,9 @@ typeorm_1.createConnection().then(function (connection) {
             var users;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, userRepository.find()];
+                    case 0: return [4 /*yield*/, userRepository.createQueryBuilder("user")
+                            .select(["user.email", "user.fullname"])
+                            .getRawMany()];
                     case 1:
                         users = _a.sent();
                         res.json(users);
@@ -80,16 +89,43 @@ typeorm_1.createConnection().then(function (connection) {
     });
     app.post("/users", function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var user, results;
+            var user, results, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, userRepository.create(req.body)];
+                    case 0:
+                        console.log(req.body);
+                        return [4 /*yield*/, userRepository.create(req.body)];
                     case 1:
                         user = _a.sent();
-                        return [4 /*yield*/, userRepository.save(user)];
+                        _a.label = 2;
                     case 2:
+                        _a.trys.push([2, 4, , 5]);
+                        return [4 /*yield*/, userRepository.save(user)];
+                    case 3:
                         results = _a.sent();
                         return [2 /*return*/, res.send(results)];
+                    case 4:
+                        error_1 = _a.sent();
+                        return [2 /*return*/, res.send(error_1)];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    });
+    app.post('/users-mail', function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var user;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, userRepository.createQueryBuilder("user")
+                            .select(["user.email", "user.fullname"])
+                            .where("user.email = :email")
+                            .andWhere("user.password = :password")
+                            .setParameters({ email: req.body.email, password: md5_typescript_1.Md5.init(req.body.password) })
+                            .getRawMany()];
+                    case 1:
+                        user = _a.sent();
+                        return [2 /*return*/, res.send(user)];
                 }
             });
         });
@@ -117,6 +153,234 @@ typeorm_1.createConnection().then(function (connection) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, userRepository.delete(req.params.id)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    //countries
+    app.get("/countries", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var countries;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, countriesRepository.find()];
+                    case 1:
+                        countries = _a.sent();
+                        res.json(countries);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    });
+    app.get("/countries/:id", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, countriesRepository.findOne(req.params.id)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    app.post("/countries", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var country, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log(req.body);
+                        return [4 /*yield*/, countriesRepository.create(req.body)];
+                    case 1:
+                        country = _a.sent();
+                        return [4 /*yield*/, countriesRepository.save(country)];
+                    case 2:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    app.put("/countries/:id", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var country, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, countriesRepository.findOne(req.params.id)];
+                    case 1:
+                        country = _a.sent();
+                        countriesRepository.merge(country, req.body);
+                        return [4 /*yield*/, countriesRepository.save(country)];
+                    case 2:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    app.delete("/countries/:id", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, countriesRepository.delete(req.params.id)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    //Services
+    app.get("/services", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var services;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, servicesRepository.find()];
+                    case 1:
+                        services = _a.sent();
+                        res.json(services);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    });
+    app.get("/services/:id", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, servicesRepository.findOne(req.params.id)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    app.post("/services", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var service, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log(req.body);
+                        return [4 /*yield*/, servicesRepository.create(req.body)];
+                    case 1:
+                        service = _a.sent();
+                        return [4 /*yield*/, servicesRepository.save(service)];
+                    case 2:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    app.put("/services/:id", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var service, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, servicesRepository.findOne(req.params.id)];
+                    case 1:
+                        service = _a.sent();
+                        servicesRepository.merge(service, req.body);
+                        return [4 /*yield*/, servicesRepository.save(service)];
+                    case 2:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    app.delete("/services/:id", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, servicesRepository.delete(req.params.id)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    //Projects
+    app.get("/projects", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var projects;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, projectsRepository.find()];
+                    case 1:
+                        projects = _a.sent();
+                        res.json(projects);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    });
+    app.get("/projects/:id", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, projectsRepository.findOne(req.params.id)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    app.post("/projects", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var project, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log(req.body);
+                        return [4 /*yield*/, projectsRepository.create(req.body)];
+                    case 1:
+                        project = _a.sent();
+                        return [4 /*yield*/, projectsRepository.save(project)];
+                    case 2:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    app.put("/projects/:id", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var project, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, projectsRepository.findOne(req.params.id)];
+                    case 1:
+                        project = _a.sent();
+                        projectsRepository.merge(project, req.body);
+                        return [4 /*yield*/, servicesRepository.save(project)];
+                    case 2:
+                        results = _a.sent();
+                        return [2 /*return*/, res.send(results)];
+                }
+            });
+        });
+    });
+    app.delete("/projects/:id", function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, projectsRepository.delete(req.params.id)];
                     case 1:
                         results = _a.sent();
                         return [2 /*return*/, res.send(results)];

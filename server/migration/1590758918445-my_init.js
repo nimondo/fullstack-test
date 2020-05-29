@@ -36,16 +36,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.myInit1590719962712 = void 0;
-var myInit1590719962712 = /** @class */ (function () {
-    function myInit1590719962712() {
-        this.name = 'myInit1590719962712';
+exports.myInit1590758918445 = void 0;
+var myInit1590758918445 = /** @class */ (function () {
+    function myInit1590758918445() {
+        this.name = 'myInit1590758918445';
     }
-    myInit1590719962712.prototype.up = function (queryRunner) {
+    myInit1590758918445.prototype.up = function (queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.query("ALTER TABLE \"user\" ADD \"fulname\" character varying NOT NULL")];
+                    case 0: return [4 /*yield*/, queryRunner.query("CREATE TABLE \"projects\" (\"id\" SERIAL NOT NULL, \"company\" character varying NOT NULL, \"description\" character varying NOT NULL, \"country\" character varying NOT NULL, \"service\" character varying NOT NULL, CONSTRAINT \"PK_6271df0a7aed1d6c0691ce6ac50\" PRIMARY KEY (\"id\"))")];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
@@ -53,11 +53,11 @@ var myInit1590719962712 = /** @class */ (function () {
             });
         });
     };
-    myInit1590719962712.prototype.down = function (queryRunner) {
+    myInit1590758918445.prototype.down = function (queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.query("ALTER TABLE \"user\" DROP COLUMN \"fulname\"")];
+                    case 0: return [4 /*yield*/, queryRunner.query("DROP TABLE \"projects\"")];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
@@ -65,6 +65,6 @@ var myInit1590719962712 = /** @class */ (function () {
             });
         });
     };
-    return myInit1590719962712;
+    return myInit1590758918445;
 }());
-exports.myInit1590719962712 = myInit1590719962712;
+exports.myInit1590758918445 = myInit1590758918445;
