@@ -36,94 +36,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express = require("express");
-var bodyParser = require("body-parser");
-var typeorm_1 = require("typeorm");
-var User_1 = require("./entity/User");
-// create typeorm connection
-typeorm_1.createConnection().then(function (connection) {
-    var userRepository = connection.getRepository(User_1.User);
-    // create and setup express app
-    var app = express();
-    app.use(bodyParser.json());
-    // register routes
-    // register routes
-    app.get("/", function (req, res) {
-        res.send("Hello Kisso!");
-    });
-    app.get("/users", function (req, res) {
+exports.myInit1590719962712 = void 0;
+var myInit1590719962712 = /** @class */ (function () {
+    function myInit1590719962712() {
+        this.name = 'myInit1590719962712';
+    }
+    myInit1590719962712.prototype.up = function (queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
-            var users;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, userRepository.find()];
+                    case 0: return [4 /*yield*/, queryRunner.query("ALTER TABLE \"user\" ADD \"fulname\" character varying NOT NULL")];
                     case 1:
-                        users = _a.sent();
-                        res.json(users);
+                        _a.sent();
                         return [2 /*return*/];
                 }
             });
         });
-    });
-    app.get("/users/:id", function (req, res) {
+    };
+    myInit1590719962712.prototype.down = function (queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
-            var results;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, userRepository.findOne(req.params.id)];
+                    case 0: return [4 /*yield*/, queryRunner.query("ALTER TABLE \"user\" DROP COLUMN \"fulname\"")];
                     case 1:
-                        results = _a.sent();
-                        return [2 /*return*/, res.send(results)];
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });
-    });
-    app.post("/users", function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var user, results;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, userRepository.create(req.body)];
-                    case 1:
-                        user = _a.sent();
-                        return [4 /*yield*/, userRepository.save(user)];
-                    case 2:
-                        results = _a.sent();
-                        return [2 /*return*/, res.send(results)];
-                }
-            });
-        });
-    });
-    app.put("/users/:id", function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var user, results;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, userRepository.findOne(req.params.id)];
-                    case 1:
-                        user = _a.sent();
-                        userRepository.merge(user, req.body);
-                        return [4 /*yield*/, userRepository.save(user)];
-                    case 2:
-                        results = _a.sent();
-                        return [2 /*return*/, res.send(results)];
-                }
-            });
-        });
-    });
-    app.delete("/users/:id", function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var results;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, userRepository.delete(req.params.id)];
-                    case 1:
-                        results = _a.sent();
-                        return [2 /*return*/, res.send(results)];
-                }
-            });
-        });
-    });
-    // start express server
-    app.listen(3002);
-});
+    };
+    return myInit1590719962712;
+}());
+exports.myInit1590719962712 = myInit1590719962712;
